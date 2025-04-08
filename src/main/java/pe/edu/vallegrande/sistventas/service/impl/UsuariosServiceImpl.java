@@ -2,10 +2,8 @@ package pe.edu.vallegrande.sistventas.service.impl;
 
 import java.util.List;
 import java.util.Optional;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import lombok.extern.slf4j.Slf4j;
 import pe.edu.vallegrande.sistventas.model.Usuarios;
 import pe.edu.vallegrande.sistventas.repository.UsuariosRepository;
@@ -31,6 +29,12 @@ public class UsuariosServiceImpl implements UsuariosService {
     }
 
     @Override
+    public List<Usuarios> findByEstado(String estado) {
+        log.info("Listando usuarios por estado: " + estado);
+        return usuariosRepository.findByEstado(estado);
+    }
+
+    @Override
     public Usuarios save(Usuarios usuarios) {
         log.info("Guardando usuarios: " + usuarios.toString());
         return usuariosRepository.save(usuarios);
@@ -40,11 +44,11 @@ public class UsuariosServiceImpl implements UsuariosService {
     public Usuarios update(Long id, Usuarios usuariosActualizados) {
         return usuariosRepository.findById(id)
             .map(usuarios -> {
-                usuarios .setNombre(usuariosActualizados.getNombre());
-                usuarios .setRol(usuariosActualizados.getRol());
+                usuarios.setNombre(usuariosActualizados.getNombre());
+                usuarios.setRol(usuariosActualizados.getRol());
                 usuarios.setEmail(usuariosActualizados.getEmail());
-                usuarios .setContraseña(usuariosActualizados.getContraseña());
-                usuarios .setEstado(usuariosActualizados.getEstado());
+                usuarios.setContraseña(usuariosActualizados.getContraseña());
+                usuarios.setEstado(usuariosActualizados.getEstado());
                 log.info("Actualizando usuarios: " + usuarios.toString());
                 return usuariosRepository.save(usuarios);
             })
@@ -53,10 +57,28 @@ public class UsuariosServiceImpl implements UsuariosService {
 
     @Override
     public boolean deleteById(Long id) {
-        if (usuariosRepository.existsById(id)) {
-            log.info("Eliminando Usuarios con ID: " + id);
-            usuariosRepository.deleteById(id);
+        Optional<Usuarios> usuarioOpt = usuariosRepository.findById(id);
+        if (usuarioOpt.isPresent()) {
+            Usuarios usuario = usuarioOpt.get();
+            usuario.setEstado("ELIMINADO");
+            usuariosRepository.save(usuario);
+            log.info("Usuario con ID: " + id + " marcado como ELIMINADO");
             return true;
+        }
+        return false;
+    }
+
+    @Override
+    public boolean restoreById(Long id) {
+        Optional<Usuarios> usuarioOpt = usuariosRepository.findById(id);
+        if (usuarioOpt.isPresent()) {
+            Usuarios usuario = usuarioOpt.get();
+            if ("ELIMINADO".equalsIgnoreCase(usuario.getEstado())) {
+                usuario.setEstado("ACTIVO");
+                usuariosRepository.save(usuario);
+                log.info("Usuario con ID: " + id + " restaurado a ACTIVO");
+                return true;
+            }
         }
         return false;
     }

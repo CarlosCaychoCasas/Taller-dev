@@ -10,11 +10,11 @@ import jakarta.persistence.Table;
 @Entity
 @Table(name = "Usuarios")
 public class Usuarios {
-    
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
-    private long id ;
+    private long id;
 
     @Column(name = "nombre")
     private String nombre;
@@ -23,14 +23,15 @@ public class Usuarios {
     private String rol;
 
     @Column(name = "email")
-    private String email;  // Corrected column name
+    private String email;
 
     @Column(name = "contraseña")
-    private String contraseña;  // Corrected column name
+    private String contraseña;
 
     @Column(name = "estado")
-    private String estado;  // Corrected column name
+    private String estado;
 
+    // Getters y Setters
     public long getId() {
         return id;
     }

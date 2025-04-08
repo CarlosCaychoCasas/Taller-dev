@@ -19,16 +19,21 @@ public class UsuariosRest {
         return usuariosService.findAll();
     }
 
+    @GetMapping("/estado/{estado}")
+    public List<Usuarios> listarPorEstado(@PathVariable String estado) {
+        return usuariosService.findByEstado(estado.toUpperCase());
+    }
+
     @PostMapping
     public Usuarios guardarUsuarios(@RequestBody Usuarios usuarios) {
         return usuariosService.save(usuarios);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Usuarios> obtenerUsuarios (@PathVariable Long id) {
+    public ResponseEntity<Usuarios> obtenerUsuarios(@PathVariable Long id) {
         return usuariosService.findById(id)
-            .map(ResponseEntity::ok)
-            .orElse(ResponseEntity.notFound().build());
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
     }
 
     @PutMapping("/{id}")
@@ -45,6 +50,15 @@ public class UsuariosRest {
     public ResponseEntity<Void> eliminarUsuarios(@PathVariable Long id) {
         if (usuariosService.deleteById(id)) {
             return ResponseEntity.noContent().build();
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @PutMapping("/restaurar/{id}")
+    public ResponseEntity<Void> restaurarUsuario(@PathVariable Long id) {
+        if (usuariosService.restoreById(id)) {
+            return ResponseEntity.ok().build();
         } else {
             return ResponseEntity.notFound().build();
         }
