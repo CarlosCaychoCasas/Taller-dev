@@ -1,8 +1,9 @@
-CREATE TABLE Proveedores (
+CREATE TABLE Usuarios (
     id INT IDENTITY(1,1) PRIMARY KEY,
-    nombre_proveedor NVARCHAR(100) NOT NULL,
-    direccion NVARCHAR(255),
-    telefono NVARCHAR(100),
-    email NVARCHAR(225)
+    nombre NVARCHAR(100) NOT NULL,
+    rol NVARCHAR(200) CHECK (rol IN ('Trabajador', 'Dueño')) NOT NULL,
+    email NVARCHAR(100) UNIQUE NOT NULL,
+    contraseña NVARCHAR(255) NOT NULL,
+    estado NVARCHAR(200) CHECK (estado IN ('ACTIVO', 'INACTIVO', 'ELIMINADO')) DEFAULT 'ACTIVO',
+    fecha_registro DATETIME DEFAULT GETDATE()
 );
-
