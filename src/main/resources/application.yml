@@ -3,9 +3,9 @@ server:
 
 spring:
   datasource:
-    url: jdbc:sqlserver://localhost:1433;databaseName=model;encrypt=true;trustServerCertificate=true
+    url: jdbc:sqlserver://localhost:1433;databaseName=crud1;encrypt=true;trustServerCertificate=true
     username: sa
-    password: Admin12345
+    password: TuContraseña123
     driver-class-name: com.microsoft.sqlserver.jdbc.SQLServerDriver
   jpa:
     database-platform: org.hibernate.dialect.SQLServerDialect
